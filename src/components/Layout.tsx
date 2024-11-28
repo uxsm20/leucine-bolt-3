@@ -39,7 +39,7 @@ export const Layout: React.FC<Props> = ({ children, sidebarOpen, onCloseSidebar,
             <button
               type="button"
               className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-              onClick={() => onCloseSidebar(!sidebarOpen)}
+              onClick={() => onCloseSidebar(sidebarOpen ? false : true)}
             >
               <Bars3Icon className="h-6 w-6" />
             </button>

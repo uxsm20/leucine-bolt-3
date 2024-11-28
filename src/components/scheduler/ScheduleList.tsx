@@ -1,33 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { MonitoringSchedule } from '../../types/monitoring';
 
 interface Props {
   schedules: MonitoringSchedule[];
-  onCreateNew: () => void;
-  onSelectSchedule: (schedule: MonitoringSchedule) => void;
+  onSelectSchedule: (scheduleId: string) => void;
 }
 
-export const ScheduleList: React.FC<Props> = ({ schedules, onCreateNew, onSelectSchedule }) => {
+export const ScheduleList: React.FC<Props> = ({ schedules, onSelectSchedule }) => {
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Monitoring Schedules</h2>
-        <button
-          onClick={onCreateNew}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-        >
-          Create New Schedule
-        </button>
-      </div>
-      
       <div className="bg-white shadow overflow-hidden sm:rounded-md">
         <ul className="divide-y divide-gray-200">
           {schedules.map((schedule) => (
             <li 
               key={schedule.id} 
-              className="px-6 py-4 hover:bg-gray-50"
+              className="px-6 py-4 hover:bg-gray-50 cursor-pointer"
             >
               <div className="flex items-center justify-between">
                 <div>
@@ -54,7 +42,10 @@ export const ScheduleList: React.FC<Props> = ({ schedules, onCreateNew, onSelect
                     {schedule.status.toUpperCase()}
                   </span>
                   <button
-                    onClick={() => onSelectSchedule(schedule)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectSchedule(schedule.id);
+                    }}
                     className="text-blue-600 hover:text-blue-900"
                   >
                     View Details

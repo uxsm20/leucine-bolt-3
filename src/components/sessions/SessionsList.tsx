@@ -76,7 +76,6 @@ export const SessionsList: React.FC<Props> = ({ sessions }) => {
         <tbody className="bg-white divide-y divide-gray-200">
           {sessions.map((session) => {
             const nextAction = getNextActionLink(session);
-            const sessionId = session.id.split('-')[0]; // Get base ID without timestamp
             
             return (
               <tr key={session.id}>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MonitoringSession } from '../../types/monitoring';
-import { format } from 'date-fns';
 
 interface Props {
   sessions: MonitoringSession[];

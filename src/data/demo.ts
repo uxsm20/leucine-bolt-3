@@ -2,22 +2,45 @@
 export const DEMO_AREAS = [
   { id: 'AREA-001', name: 'Sterile Manufacturing', type: 'production' },
   { id: 'AREA-002', name: 'Aseptic Processing', type: 'production' },
-  { id: 'AREA-003', name: 'Quality Control', type: 'laboratory' }
+  { id: 'AREA-003', name: 'Quality Control', type: 'laboratory' },
+  { id: 'AREA-004', name: 'Fill & Finish', type: 'production' },
+  { id: 'AREA-005', name: 'Raw Material Storage', type: 'production' }
 ];
 
 // Rooms
 export const DEMO_ROOMS = [
   { id: 'ROOM-001', areaId: 'AREA-001', name: 'Filling Room', roomNumber: 'FR-101', cleanRoomClass: 'A' },
   { id: 'ROOM-002', areaId: 'AREA-001', name: 'Material Airlock', roomNumber: 'MA-102', cleanRoomClass: 'B' },
-  { id: 'ROOM-003', areaId: 'AREA-002', name: 'Compounding Room', roomNumber: 'CR-201', cleanRoomClass: 'B' }
+  { id: 'ROOM-003', areaId: 'AREA-002', name: 'Compounding Room', roomNumber: 'CR-201', cleanRoomClass: 'B' },
+  { id: 'ROOM-004', areaId: 'AREA-002', name: 'Buffer Preparation', roomNumber: 'BP-202', cleanRoomClass: 'C' },
+  { id: 'ROOM-005', areaId: 'AREA-003', name: 'Microbiology Lab', roomNumber: 'ML-301', cleanRoomClass: 'D' },
+  { id: 'ROOM-006', areaId: 'AREA-004', name: 'Visual Inspection', roomNumber: 'VI-401', cleanRoomClass: 'C' },
+  { id: 'ROOM-007', areaId: 'AREA-004', name: 'Packaging Area', roomNumber: 'PA-402', cleanRoomClass: 'D' },
+  { id: 'ROOM-008', areaId: 'AREA-005', name: 'Raw Material Store', roomNumber: 'RM-501', cleanRoomClass: 'D' }
 ];
 
 // Sampling Points
 export const DEMO_POINTS = [
   { id: 'POINT-001', roomId: 'ROOM-001', name: 'Near RABS - Left' },
   { id: 'POINT-002', roomId: 'ROOM-001', name: 'Near RABS - Right' },
-  { id: 'POINT-003', roomId: 'ROOM-002', name: 'Near Door - Entry' },
-  { id: 'POINT-004', roomId: 'ROOM-002', name: 'Near Door - Exit' }
+  { id: 'POINT-003', roomId: 'ROOM-001', name: 'Center of Room' },
+  { id: 'POINT-004', roomId: 'ROOM-002', name: 'Near Door - Entry' },
+  { id: 'POINT-005', roomId: 'ROOM-002', name: 'Near Door - Exit' },
+  { id: 'POINT-006', roomId: 'ROOM-002', name: 'Material Pass Box' },
+  { id: 'POINT-007', roomId: 'ROOM-003', name: 'Near Vessel - 1' },
+  { id: 'POINT-008', roomId: 'ROOM-003', name: 'Near Vessel - 2' },
+  { id: 'POINT-009', roomId: 'ROOM-003', name: 'Near HVAC Return' },
+  { id: 'POINT-010', roomId: 'ROOM-004', name: 'Buffer Prep Station 1' },
+  { id: 'POINT-011', roomId: 'ROOM-004', name: 'Buffer Prep Station 2' },
+  { id: 'POINT-012', roomId: 'ROOM-005', name: 'Laminar Flow 1' },
+  { id: 'POINT-013', roomId: 'ROOM-005', name: 'Laminar Flow 2' },
+  { id: 'POINT-014', roomId: 'ROOM-006', name: 'Inspection Booth 1' },
+  { id: 'POINT-015', roomId: 'ROOM-006', name: 'Inspection Booth 2' },
+  { id: 'POINT-016', roomId: 'ROOM-007', name: 'Packaging Line 1' },
+  { id: 'POINT-017', roomId: 'ROOM-007', name: 'Packaging Line 2' },
+  { id: 'POINT-018', roomId: 'ROOM-008', name: 'Storage Area 1' },
+  { id: 'POINT-019', roomId: 'ROOM-008', name: 'Storage Area 2' },
+  { id: 'POINT-020', roomId: 'ROOM-008', name: 'Quarantine Area' }
 ];
 
 // Products
