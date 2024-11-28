@@ -78,7 +78,11 @@ export const MediaVerificationPage: React.FC<Props> = ({ sessions, onStartSessio
           gptPassed: selectedLotDetails.gptTest.passed,
           gptDate: new Date(selectedLotDetails.gptTest.date),
           sterilityPassed: selectedLotDetails.sterilityTest.passed,
-          sterilityDate: new Date(selectedLotDetails.sterilityTest.date)
+          sterilityDate: new Date(selectedLotDetails.sterilityTest.date),
+          growthPromotionResults: {
+            trypticSoyAgar: true,
+            sabouraudDextroseAgar: true
+          }
         },
         plates: {
           sample: plateIds.samplePlates,
