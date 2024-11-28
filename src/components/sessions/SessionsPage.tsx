@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MonitoringSession, ProductionArea } from '../../types/monitoring';
+import { MonitoringSession } from '../../types/monitoring';
 import { SessionForm } from './SessionForm';
 import { SessionsList } from './SessionsList';
 import { DEMO_ROOMS, DEMO_POINTS, DEMO_AREAS } from '../../data/demo';
@@ -14,6 +14,7 @@ export const SessionsPage: React.FC<Props> = ({
   onCreateSession,
 }) => {
   const [showForm, setShowForm] = useState(false);
+  const [areas] = useState(DEMO_AREAS);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -39,7 +40,7 @@ export const SessionsPage: React.FC<Props> = ({
             <div className="bg-white shadow sm:rounded-lg">
               <div className="px-4 py-5 sm:p-6">
                 <SessionForm
-                  areas={DEMO_AREAS}
+                  areas={areas}
                   rooms={DEMO_ROOMS}
                   samplingPoints={DEMO_POINTS}
                   onSubmit={(data) => {

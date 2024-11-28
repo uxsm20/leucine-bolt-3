@@ -7,12 +7,11 @@ import { DEMO_INCUBATION_BATCHES } from '../../data/demo';
 
 interface Props {
   onToggleSidebar: () => void;
-  sessions: MonitoringSession[];
 }
 
-export const IncubationDashboard: React.FC<Props> = ({ onToggleSidebar, sessions }) => {
+export const IncubationDashboard: React.FC<Props> = ({ onToggleSidebar }) => {
   const [selectedMediaType, setSelectedMediaType] = useState<'TSA' | 'SDA'>('TSA');
-  const [batches] = useState<IncubationBatch[]>(DEMO_INCUBATION_BATCHES);
+  const [batches] = useState(DEMO_INCUBATION_BATCHES);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">

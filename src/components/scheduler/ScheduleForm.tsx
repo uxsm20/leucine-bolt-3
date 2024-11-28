@@ -26,7 +26,6 @@ export const ScheduleForm: React.FC<Props> = ({
   const [toleranceValue, setToleranceValue] = useState('15');
   const [toleranceUnit, setToleranceUnit] = useState<'minutes' | 'hours' | 'days'>('minutes');
   const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([{ hour: 9, minute: 0 }]);
   const [activityStatus, setActivityStatus] = useState<'production-ongoing' | 'idle'>('idle');
   const [selectedBatch, setSelectedBatch] = useState<string>('');

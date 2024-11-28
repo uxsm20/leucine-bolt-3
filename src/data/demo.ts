@@ -1,5 +1,7 @@
+import { MonitoringSchedule, ProductionArea, Room, SamplingPoint, MonitoringSession, IncubationBatch } from '../types/monitoring';
+
 // Production Areas
-export const DEMO_AREAS = [
+export const DEMO_AREAS: ProductionArea[] = [
   { id: 'AREA-001', name: 'Sterile Manufacturing', type: 'production' },
   { id: 'AREA-002', name: 'Aseptic Processing', type: 'production' },
   { id: 'AREA-003', name: 'Quality Control', type: 'laboratory' },
@@ -8,7 +10,7 @@ export const DEMO_AREAS = [
 ];
 
 // Rooms
-export const DEMO_ROOMS = [
+export const DEMO_ROOMS: Room[] = [
   { id: 'ROOM-001', areaId: 'AREA-001', name: 'Filling Room', roomNumber: 'FR-101', cleanRoomClass: 'A' },
   { id: 'ROOM-002', areaId: 'AREA-001', name: 'Material Airlock', roomNumber: 'MA-102', cleanRoomClass: 'B' },
   { id: 'ROOM-003', areaId: 'AREA-002', name: 'Compounding Room', roomNumber: 'CR-201', cleanRoomClass: 'B' },
@@ -20,7 +22,7 @@ export const DEMO_ROOMS = [
 ];
 
 // Sampling Points
-export const DEMO_POINTS = [
+export const DEMO_POINTS: SamplingPoint[] = [
   { id: 'POINT-001', roomId: 'ROOM-001', name: 'Near RABS - Left' },
   { id: 'POINT-002', roomId: 'ROOM-001', name: 'Near RABS - Right' },
   { id: 'POINT-003', roomId: 'ROOM-001', name: 'Center of Room' },
@@ -118,7 +120,7 @@ export const DEMO_MEDIA_LOTS = [
 ];
 
 // Demo Sessions
-export const DEMO_SESSIONS = [
+export const DEMO_SESSIONS: MonitoringSession[] = [
   // Session ready for incubation
   {
     id: 'SESSION-001',
@@ -293,53 +295,48 @@ export const DEMO_SESSIONS = [
 ];
 
 // Demo Schedules
-export const DEMO_SCHEDULES = [
+export const DEMO_SCHEDULES: MonitoringSchedule[] = [
   {
     id: 'SCH-001',
     monitoringType: 'settle-plate',
-    samplingPoints: ['POINT-001', 'POINT-002'],
+    samplingPoints: ['POINT-001', 'POINT-002', 'POINT-003'],
     frequency: 'daily',
     tolerance: {
-      value: 15,
+      value: 30,
       unit: 'minutes'
     },
     startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // 7 days ago
     timeSlots: [
       { hour: 9, minute: 0 },
-      { hour: 14, minute: 0 }
+      { hour: 14, minute: 30 }
     ],
     assignedPersonnel: [],
     status: 'active',
-    activityStatus: {
-      type: 'production-ongoing',
-      batchId: 'BATCH-001'
-    },
-    nextSession: new Date(Date.now() + 1000 * 60 * 60 * 24) // Tomorrow
+    activityStatus: { type: 'production-ongoing', batchId: 'BATCH-001' },
+    nextSession: new Date(Date.now() + 1000 * 60 * 60 * 24) // tomorrow
   },
   {
     id: 'SCH-002',
     monitoringType: 'settle-plate',
-    samplingPoints: ['POINT-003', 'POINT-004'],
+    samplingPoints: ['POINT-004', 'POINT-005'],
     frequency: 'weekly',
     tolerance: {
-      value: 1,
+      value: 2,
       unit: 'hours'
     },
-    startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30), // 30 days ago
+    startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 14), // 14 days ago
     timeSlots: [
       { hour: 10, minute: 0 }
     ],
     assignedPersonnel: [],
     status: 'active',
-    activityStatus: {
-      type: 'idle'
-    },
-    nextSession: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3) // 3 days from now
+    activityStatus: { type: 'idle' },
+    nextSession: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3) // in 3 days
   }
 ];
 
 // Demo Incubation Batches
-export const DEMO_INCUBATION_BATCHES = [
+export const DEMO_INCUBATION_BATCHES: IncubationBatch[] = [
   // Batch in Stage 1
   {
     id: 'INC-001',

@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const SchedulerPage: React.FC<Props> = ({ sessions }) => {
-  const [schedules, setSchedules] = useState<MonitoringSchedule[]>(DEMO_SCHEDULES);
+  const [schedules, setSchedules] = useState(DEMO_SCHEDULES);
   const [showForm, setShowForm] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState<string | null>(null);
 
