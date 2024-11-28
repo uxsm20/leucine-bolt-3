@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Bars3Icon } from '@heroicons/react/24/outline';
-import { CompletedIncubationsList } from './CompletedIncubationsList';
 import { OngoingIncubationsList } from './OngoingIncubationsList';
 import { DEMO_INCUBATION_BATCHES } from '../../data/demo';
 
