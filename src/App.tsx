@@ -14,29 +14,13 @@ import { CreateIncubationBatch } from './components/incubation/CreateIncubationB
 import { IncubatorAssignmentPage } from './components/incubation/IncubatorAssignmentPage';
 import { IncubationMonitoringPage } from './components/incubation/IncubationMonitoringPage';
 import { Stage2SetupPage } from './components/incubation/Stage2SetupPage';
-import { SignInPage } from './components/auth/SignInPage';
-import { SignUpPage } from './components/auth/SignUpPage';
-import { DEMO_SESSIONS } from './data/demo';
+import { DEMO_AREAS, DEMO_ROOMS, DEMO_POINTS, DEMO_SESSIONS } from './data/demo';
 import { MonitoringSession, SessionStartDetails } from './types/monitoring';
 
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Set to true for demo
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sessions, setSessions] = useState<MonitoringSession[]>(DEMO_SESSIONS);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentUser] = useState({ id: '1', name: 'John Doe' });
-
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setSidebarOpen(false);
-  };
-
-  const handleCloseSidebar = (state: boolean) => {
-    setSidebarOpen(state);
-  };
 
   const handleCreateSession = (sessionData: Partial<MonitoringSession>) => {
     const newSession = {
@@ -57,10 +41,6 @@ const App: React.FC = () => {
     ));
   };
 
-  const handleScheduledSessions = (newSessions: MonitoringSession[]) => {
-    setSessions(prev => [...prev, ...newSessions]);
-  };
-
   const handleStorageComplete = (sessionId: string, storageDetails: any) => {
     setSessions(prev => prev.map(session =>
       session.id === sessionId
@@ -69,247 +49,216 @@ const App: React.FC = () => {
     ));
   };
 
-  const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    if (!isAuthenticated) {
-      return <Navigate to="/signin" />;
-    }
-    return <>{children}</>;
+  const handleUpdateSession = (sessionId: string, updates: Partial<MonitoringSession>) => {
+    setSessions(prev => prev.map(session =>
+      session.id === sessionId
+        ? { ...session, ...updates }
+        : session
+    ));
   };
 
   return (
     <Router>
       <Routes>
-        <Route path="/signin" element={<SignInPage onLogin={handleLogin} />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        
         <Route path="/" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <MonitoringDashboard 
-                sessions={sessions}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <MonitoringDashboard sessions={sessions} />
+          </Layout>
         } />
 
         <Route path="/scheduler" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <SchedulerPage 
-                onScheduledSessions={handleScheduledSessions}
-                sessions={sessions}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <SchedulerPage 
+              sessions={sessions}
+              onScheduledSessions={(newSessions) => {
+                setSessions(prev => [...prev, ...newSessions]);
+              }}
+            />
+          </Layout>
         } />
 
         <Route path="/sessions" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <SessionsPage
-                sessions={sessions}
-                onCreateSession={handleCreateSession}
-                onStartSession={handleStartSession}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <SessionsPage
+              areas={DEMO_AREAS}
+              rooms={DEMO_ROOMS}
+              samplingPoints={DEMO_POINTS}
+              sessions={sessions}
+              onCreateSession={handleCreateSession}
+              onStartSession={handleStartSession}
+            />
+          </Layout>
         } />
 
         <Route path="/sessions/:sessionId/details" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <SessionDetailsPage sessions={sessions} />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <SessionDetailsPage sessions={sessions} />
+          </Layout>
         } />
 
         <Route path="/sessions/:sessionId/verify-media" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <MediaVerificationPage 
-                sessions={sessions}
-                onStartSession={handleStartSession}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <MediaVerificationPage 
+              sessions={sessions}
+              onStartSession={handleStartSession}
+            />
+          </Layout>
         } />
 
         <Route path="/sessions/:sessionId/store-controls" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <NegativeControlStoragePage 
-                sessions={sessions}
-                onStorageComplete={handleStorageComplete}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <NegativeControlStoragePage 
+              sessions={sessions}
+              onStorageComplete={handleStorageComplete}
+            />
+          </Layout>
         } />
 
         <Route path="/sessions/:sessionId/execute" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <SessionExecutionPage 
-                sessions={sessions}
-                onUpdateSession={(sessionId, updates) => {
-                  setSessions(prev => prev.map(session =>
-                    session.id === sessionId
-                      ? { ...session, ...updates }
-                      : session
-                  ));
-                }}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <SessionExecutionPage 
+              sessions={sessions}
+              onUpdateSession={handleUpdateSession}
+            />
+          </Layout>
         } />
 
         <Route path="/sessions/:sessionId/incubation" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <IncubationPage 
-                sessions={sessions}
-                onStartIncubation={(sessionId, details) => {
-                  setSessions(prev => prev.map(session =>
-                    session.id === sessionId
-                      ? { ...session, incubation: details }
-                      : session
-                  ));
-                }}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <IncubationPage 
+              sessions={sessions}
+              onStartIncubation={(sessionId, details) => {
+                setSessions(prev => prev.map(session =>
+                  session.id === sessionId
+                    ? { ...session, incubation: details }
+                    : session
+                ));
+              }}
+            />
+          </Layout>
         } />
 
         <Route path="/incubation" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <IncubationDashboard 
-                sessions={sessions}
-                onToggleSidebar={() => handleCloseSidebar(!sidebarOpen)}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <IncubationDashboard 
+              sessions={sessions}
+              onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+            />
+          </Layout>
         } />
 
         <Route path="/incubation/new" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <CreateIncubationBatch 
-                sessions={sessions}
-                onCreateBatch={(sessionIds) => {
-                  const batchId = Date.now().toString();
-                  setSessions(prev => prev.map(session =>
-                    sessionIds.includes(session.id)
-                      ? { ...session, incubationBatchId: batchId }
-                      : session
-                  ));
-                  return batchId;
-                }}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <CreateIncubationBatch 
+              sessions={sessions}
+              onCreateBatch={(sessionIds) => {
+                const batchId = Date.now().toString();
+                setSessions(prev => prev.map(session =>
+                  sessionIds.includes(session.id)
+                    ? { ...session, incubationBatchId: batchId }
+                    : session
+                ));
+                return batchId;
+              }}
+            />
+          </Layout>
         } />
 
         <Route path="/incubation/:incubationSessionId/assign-incubator" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <IncubatorAssignmentPage 
-                currentUser={currentUser}
-                onAssignIncubator={(id, details) => {
-                  setSessions(prev => prev.map(session =>
-                    session.id === id
-                      ? { ...session, incubatorAssignment: details }
-                      : session
-                  ));
-                }}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <IncubatorAssignmentPage 
+              currentUser={currentUser}
+              onAssignIncubator={(id, details) => {
+                setSessions(prev => prev.map(session =>
+                  session.id === id
+                    ? { ...session, incubatorAssignment: details }
+                    : session
+                ));
+              }}
+            />
+          </Layout>
         } />
 
         <Route path="/incubation/:incubationSessionId/monitoring/stage/:stage" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <IncubationMonitoringPage 
-                currentUser={currentUser}
-                onUpdateIncubation={(id, details) => {
-                  setSessions(prev => prev.map(session =>
-                    session.id === id
-                      ? { ...session, ...details }
-                      : session
-                  ));
-                }}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <IncubationMonitoringPage 
+              currentUser={currentUser}
+              onUpdateIncubation={(id, details) => {
+                setSessions(prev => prev.map(session =>
+                  session.id === id
+                    ? { ...session, ...details }
+                    : session
+                ));
+              }}
+            />
+          </Layout>
         } />
 
         <Route path="/incubation/:incubationSessionId/stage2-setup" element={
-          <ProtectedRoute>
-            <Layout 
-              sidebarOpen={sidebarOpen} 
-              onCloseSidebar={handleCloseSidebar}
-              onLogout={handleLogout}
-            >
-              <Stage2SetupPage 
-                currentUser={currentUser}
-                onStartStage2={(id, details) => {
-                  setSessions(prev => prev.map(session =>
-                    session.id === id
-                      ? { ...session, stage2Setup: details }
-                      : session
-                  ));
-                }}
-              />
-            </Layout>
-          </ProtectedRoute>
+          <Layout 
+            sidebarOpen={sidebarOpen} 
+            onCloseSidebar={setSidebarOpen}
+            onLogout={() => {}}
+          >
+            <Stage2SetupPage 
+              currentUser={currentUser}
+              onStartStage2={(id, details) => {
+                setSessions(prev => prev.map(session =>
+                  session.id === id
+                    ? { ...session, stage2Setup: details }
+                    : session
+                ));
+              }}
+            />
+          </Layout>
         } />
       </Routes>
     </Router>

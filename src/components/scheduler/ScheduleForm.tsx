@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { TimeSlotInput } from './TimeSlotInput';
 import { TimeSlot } from '../../types/scheduler';
-import { MonitoringSchedule } from '../../types/monitoring';
+import { MonitoringSchedule, ProductionArea, Room, SamplingPoint } from '../../types/monitoring';
 import { DEMO_PRODUCTS, DEMO_BATCHES } from '../../data/demo';
 
 interface Props {
-  areas: any[];
-  rooms: any[];
-  samplingPoints: any[];
+  areas: ProductionArea[];
+  rooms: Room[];
+  samplingPoints: SamplingPoint[];
   onSubmit: (data: Partial<MonitoringSchedule>) => void;
   onCancel: () => void;
 }
@@ -86,7 +86,6 @@ export const ScheduleForm: React.FC<Props> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow">
-      {/* Area Selection */}
       <div>
         <label className="block text-sm font-medium text-gray-700">Production Area</label>
         <select
@@ -106,7 +105,6 @@ export const ScheduleForm: React.FC<Props> = ({
         </select>
       </div>
 
-      {/* Room Selection */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">Rooms</label>
         <div className="space-y-2 max-h-60 overflow-y-auto border rounded-md p-3">
@@ -136,32 +134,36 @@ export const ScheduleForm: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Sampling Points */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">Sampling Points</label>
         <div className="space-y-2 max-h-60 overflow-y-auto border rounded-md p-3">
-          {filteredPoints.map(point => (
-            <label key={point.id} className="flex items-center">
-              <input
-                type="checkbox"
-                value={point.id}
-                checked={selectedPoints.includes(point.id)}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setSelectedPoints([...selectedPoints, point.id]);
-                  } else {
-                    setSelectedPoints(selectedPoints.filter(id => id !== point.id));
-                  }
-                }}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <span className="ml-2 text-sm text-gray-700">{point.name}</span>
-            </label>
-          ))}
+          {selectedRooms.length > 0 ? (
+            filteredPoints.map(point => (
+              <label key={point.id} className="flex items-center">
+                <input
+                  type="checkbox"
+                  value={point.id}
+                  checked={selectedPoints.includes(point.id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedPoints([...selectedPoints, point.id]);
+                    } else {
+                      setSelectedPoints(selectedPoints.filter(id => id !== point.id));
+                    }
+                  }}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <span className="ml-2 text-sm text-gray-700">
+                  {point.name} ({rooms.find(r => r.id === point.roomId)?.name})
+                </span>
+              </label>
+            ))
+          ) : (
+            <p className="text-sm text-gray-500 p-2">Select rooms to view sampling points</p>
+          )}
         </div>
       </div>
 
-      {/* Schedule Details */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Frequency</label>
@@ -200,7 +202,6 @@ export const ScheduleForm: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Date Range */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Start Date</label>
@@ -223,7 +224,6 @@ export const ScheduleForm: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Time Slots */}
       <div>
         <div className="flex justify-between items-center mb-2">
           <label className="block text-sm font-medium text-gray-700">Time Slots</label>
@@ -248,7 +248,6 @@ export const ScheduleForm: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Activity Status */}
       <div>
         <label className="block text-sm font-medium text-gray-700">Activity Status</label>
         <select
@@ -261,7 +260,6 @@ export const ScheduleForm: React.FC<Props> = ({
         </select>
       </div>
 
-      {/* Batch Selection */}
       {activityStatus === 'production-ongoing' && (
         <div>
           <label className="block text-sm font-medium text-gray-700">Batch</label>
@@ -286,7 +284,6 @@ export const ScheduleForm: React.FC<Props> = ({
         </div>
       )}
 
-      {/* Form Actions */}
       <div className="flex justify-end space-x-3">
         <button
           type="button"

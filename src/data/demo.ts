@@ -1,7 +1,5 @@
-import { ProductionArea, MonitoringSchedule, MonitoringSession, IncubationBatch } from '../types/monitoring';
-
 // Production Areas
-export const DEMO_AREAS: ProductionArea[] = [
+export const DEMO_AREAS = [
   { id: 'AREA-001', name: 'Sterile Manufacturing', type: 'production' },
   { id: 'AREA-002', name: 'Aseptic Processing', type: 'production' },
   { id: 'AREA-003', name: 'Quality Control', type: 'laboratory' }
@@ -96,64 +94,58 @@ export const DEMO_MEDIA_LOTS = [
   }
 ];
 
-// Demo Schedules
-export const DEMO_SCHEDULES: MonitoringSchedule[] = [
-  {
-    id: 'SCH-001',
-    monitoringType: 'settle-plate',
-    samplingPoints: ['POINT-001', 'POINT-002'],
-    frequency: 'daily',
-    tolerance: {
-      value: 30,
-      unit: 'minutes'
-    },
-    startDate: new Date('2023-10-01'),
-    timeSlots: [
-      { hour: 9, minute: 0 },
-      { hour: 15, minute: 0 }
-    ],
-    assignedPersonnel: [],
-    status: 'active',
-    activityStatus: {
-      type: 'production-ongoing',
-      batchId: 'BATCH-001'
-    },
-    nextSession: new Date(Date.now() + 1000 * 60 * 60 * 24)
-  },
-  {
-    id: 'SCH-002',
-    monitoringType: 'settle-plate',
-    samplingPoints: ['POINT-003', 'POINT-004'],
-    frequency: 'weekly',
-    tolerance: {
-      value: 1,
-      unit: 'hours'
-    },
-    startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30), // 30 days ago
-    timeSlots: [
-      { hour: 10, minute: 0 }
-    ],
-    assignedPersonnel: [],
-    status: 'active',
-    activityStatus: {
-      type: 'idle'
-    },
-    nextSession: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3) // 3 days from now
-  }
-];
-
 // Demo Sessions
-export const DEMO_SESSIONS: MonitoringSession[] = [
+export const DEMO_SESSIONS = [
+  // Session ready for incubation
   {
     id: 'SESSION-001',
     scheduleId: 'SCH-001',
-    scheduledTime: new Date(),
+    scheduledTime: new Date(Date.now() - 1000 * 60 * 60 * 24), // Yesterday
     samplingPoints: ['POINT-001', 'POINT-002'],
-    status: 'pending',
+    status: 'in-progress',
     plates: [],
-    activityStatus: {
+    activityStatus: { 
       type: 'production-ongoing',
       batchId: 'BATCH-001'
+    },
+    startDetails: {
+      actualStartTime: new Date(Date.now() - 1000 * 60 * 60 * 23), // 23 hours ago
+      mediaDetails: {
+        lotNumber: 'TSA-2023-001',
+        numberOfPlates: 2,
+        negativeControlPlates: 1,
+        expiryDate: new Date('2024-12-31'),
+        plates: {
+          sample: [
+            { id: 'TSA-20231123-S01-123456', pointId: 'POINT-001', type: 'sample' },
+            { id: 'TSA-20231123-S02-123456', pointId: 'POINT-002', type: 'sample' }
+          ],
+          negativeControl: [
+            { id: 'TSA-20231123-NC01-123456', type: 'negative-control' }
+          ]
+        }
+      }
+    },
+    exposures: [
+      {
+        pointId: 'POINT-001',
+        plateId: 'TSA-20231123-S01-123456',
+        startTime: new Date(Date.now() - 1000 * 60 * 60 * 22),
+        endTime: new Date(Date.now() - 1000 * 60 * 60 * 18)
+      },
+      {
+        pointId: 'POINT-002',
+        plateId: 'TSA-20231123-S02-123456',
+        startTime: new Date(Date.now() - 1000 * 60 * 60 * 22),
+        endTime: new Date(Date.now() - 1000 * 60 * 60 * 18)
+      }
+    ],
+    negativeControlStorage: {
+      storageTime: new Date(Date.now() - 1000 * 60 * 60 * 23),
+      endTime: new Date(Date.now() - 1000 * 60 * 60 * 22),
+      storageLocation: 'sterile-incubator-1',
+      storedBy: 'John Doe',
+      temperature: 20
     }
   },
   // Session in Stage 1 incubation
@@ -277,29 +269,57 @@ export const DEMO_SESSIONS: MonitoringSession[] = [
   }
 ];
 
-// Demo Incubation Batches
-export const DEMO_INCUBATION_BATCHES: IncubationBatch[] = [
+// Demo Schedules
+export const DEMO_SCHEDULES = [
   {
-    id: 'INC-001',
-    mediaType: 'TSA',
-    startTime: new Date(),
-    sessions: ['SESSION-001'],
-    plates: [
-      {
-        id: 'PLATE-001',
-        type: 'sample',
-        sessionId: 'SESSION-001'
-      }
+    id: 'SCH-001',
+    monitoringType: 'settle-plate',
+    samplingPoints: ['POINT-001', 'POINT-002'],
+    frequency: 'daily',
+    tolerance: {
+      value: 15,
+      unit: 'minutes'
+    },
+    startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // 7 days ago
+    timeSlots: [
+      { hour: 9, minute: 0 },
+      { hour: 14, minute: 0 }
     ],
-    status: 'in-progress',
-    currentStage: 1,
-    currentIncubator: 'INC-A',
-    temperature: 35,
-    temperatureReadings: []
+    assignedPersonnel: [],
+    status: 'active',
+    activityStatus: {
+      type: 'production-ongoing',
+      batchId: 'BATCH-001'
+    },
+    nextSession: new Date(Date.now() + 1000 * 60 * 60 * 24) // Tomorrow
   },
+  {
+    id: 'SCH-002',
+    monitoringType: 'settle-plate',
+    samplingPoints: ['POINT-003', 'POINT-004'],
+    frequency: 'weekly',
+    tolerance: {
+      value: 1,
+      unit: 'hours'
+    },
+    startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30), // 30 days ago
+    timeSlots: [
+      { hour: 10, minute: 0 }
+    ],
+    assignedPersonnel: [],
+    status: 'active',
+    activityStatus: {
+      type: 'idle'
+    },
+    nextSession: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3) // 3 days from now
+  }
+];
+
+// Demo Incubation Batches
+export const DEMO_INCUBATION_BATCHES = [
   // Batch in Stage 1
   {
-    id: 'INC-002',
+    id: 'INC-001',
     mediaType: 'TSA',
     startTime: new Date(Date.now() - 1000 * 60 * 60 * 42), // 42 hours ago
     sessions: ['SESSION-002'],
@@ -322,7 +342,7 @@ export const DEMO_INCUBATION_BATCHES: IncubationBatch[] = [
   },
   // Batch ready for Stage 2
   {
-    id: 'INC-003',
+    id: 'INC-002',
     mediaType: 'TSA',
     startTime: new Date(Date.now() - 1000 * 60 * 60 * 66), // 66 hours ago
     sessions: ['SESSION-003'],
@@ -347,7 +367,7 @@ export const DEMO_INCUBATION_BATCHES: IncubationBatch[] = [
   },
   // Completed batch
   {
-    id: 'INC-004',
+    id: 'INC-003',
     mediaType: 'TSA',
     startTime: new Date(Date.now() - 1000 * 60 * 60 * 96), // 96 hours ago
     sessions: ['SESSION-001'],
