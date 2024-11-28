@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Bars3Icon } from '@heroicons/react/24/outline';
-import { IncubationBatch, MonitoringSession } from '../../types/monitoring';
+import { IncubationBatch } from '../../types/monitoring';
 import { OngoingIncubationsList } from './OngoingIncubationsList';
 import { DEMO_INCUBATION_BATCHES } from '../../data/demo';
 

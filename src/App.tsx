@@ -203,7 +203,6 @@ const App: React.FC = () => {
             onLogout={() => {}}
           >
             <IncubationDashboard 
-              sessions={sessions}
               onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
             />
           </Layout>
