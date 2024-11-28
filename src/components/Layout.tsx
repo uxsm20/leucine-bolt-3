@@ -5,9 +5,10 @@ import { XMarkIcon, Bars3Icon } from '@heroicons/react/24/outline';
 interface Props {
   sidebarOpen: boolean;
   setSidebarOpen: (state: boolean) => void;
+  onLogout: () => void;
 }
 
-export const Layout: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
+export const Layout: React.FC<Props> = ({ sidebarOpen, setSidebarOpen, onLogout }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -17,6 +18,11 @@ export const Layout: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
     { name: 'Sessions', href: '/sessions' },
     { name: 'Incubation', href: '/incubation' }
   ];
+
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
 
   const isActionPage = location.pathname.includes('/execute') || 
                       location.pathname.includes('/verify-media') ||
@@ -92,13 +98,24 @@ export const Layout: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                 );
               })}
             </nav>
+
+            <div className="p-4 border-t border-gray-200">
+              <button
+                onClick={handleLogout}
+                className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                Sign Out
+              </button>
+            </div>
           </div>
         </>
       )}
 
       {/* Main content */}
-      <div className="pt-16">
-        <Outlet />
+      <div className="flex-1 pt-16">
+        <main className="py-6 px-4 sm:px-6 lg:px-8">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

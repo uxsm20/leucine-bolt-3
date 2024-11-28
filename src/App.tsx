@@ -67,6 +67,10 @@ const App: React.FC = () => {
     setIsAuthenticated(true);
   };
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+  };
+
   return (
     <Router>
       <Routes>
@@ -75,7 +79,7 @@ const App: React.FC = () => {
         } />
         
         {isAuthenticated ? (
-          <Route element={<Layout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}>
+          <Route element={<Layout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} onLogout={handleLogout} />}>
             <Route index element={<MonitoringDashboard sessions={sessions} />} />
             <Route path="/scheduler" element={<SchedulerPage sessions={sessions} />} />
             <Route path="/incubation" element={<IncubationDashboard onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />} />
