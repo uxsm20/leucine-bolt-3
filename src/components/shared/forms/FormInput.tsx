@@ -14,13 +14,13 @@ export const FormInput: React.FC<FormInputProps> = ({
   ...props
 }) => {
   return (
-    <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+    <div className="mb-6">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
         {label}
       </label>
       <input
         className={`
-          block w-full rounded-md border-0 py-1.5 px-3
+          block w-full rounded-md border-0 py-2.5 px-3.5
           text-gray-900 shadow-sm ring-1 ring-inset
           ${error 
             ? 'ring-red-300 focus:ring-red-500' 
@@ -36,7 +36,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         {...props}
       />
       {(error || helperText) && (
-        <p className={`mt-1 text-sm ${error ? 'text-red-600' : 'text-gray-500'}`}>
+        <p className={`mt-2 text-sm ${error ? 'text-red-600' : 'text-gray-500'}`}>
           {error || helperText}
         </p>
       )}

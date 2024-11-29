@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { MonitoringSession } from './types/monitoring';
 import { DEMO_SESSIONS } from './data/demo';
@@ -33,34 +33,31 @@ const App: React.FC = () => {
         type: 'idle' as const
       }
     },
-    ...DEMO_SESSIONS.map(session => {
-      const mappedSession = {
-        ...session,
-        status: session.status as 'completed' | 'pending' | 'in-progress',
-        activityStatus: {
-          ...session.activityStatus,
-          type: session.activityStatus.type as 'production-ongoing' | 'idle'
-        },
-        scheduledTime: new Date(session.scheduledTime),
-        startDetails: session.startDetails ? {
-          ...session.startDetails,
-          mediaDetails: {
-            ...session.startDetails.mediaDetails,
-            plates: {
-              sample: session.startDetails.mediaDetails.plates?.sample.map(plate => ({
-                ...plate,
-                type: 'sample' as const
-              })) || [],
-              negativeControl: session.startDetails.mediaDetails.plates?.negativeControl.map(plate => ({
-                ...plate,
-                type: 'negative-control' as const
-              })) || []
-            }
+    ...DEMO_SESSIONS.map(session => ({
+      ...session,
+      status: session.status as 'completed' | 'pending' | 'in-progress',
+      activityStatus: {
+        ...session.activityStatus,
+        type: session.activityStatus.type as 'production-ongoing' | 'idle'
+      },
+      scheduledTime: new Date(session.scheduledTime),
+      startDetails: session.startDetails ? {
+        ...session.startDetails,
+        mediaDetails: {
+          ...session.startDetails.mediaDetails,
+          plates: {
+            sample: session.startDetails.mediaDetails.plates?.sample.map(plate => ({
+              ...plate,
+              type: 'sample' as const
+            })) || [],
+            negativeControl: session.startDetails.mediaDetails.plates?.negativeControl.map(plate => ({
+              ...plate,
+              type: 'negative-control' as const
+            })) || []
           }
-        } : undefined
-      };
-      return mappedSession;
-    })
+        }
+      } : undefined
+    }))
   ]);
 
   const handleLogin = () => {
@@ -78,79 +75,81 @@ const App: React.FC = () => {
           isAuthenticated ? <Navigate to="/" /> : <SignInPage onLogin={handleLogin} />
         } />
         
-        {isAuthenticated ? (
-          <Route element={<Layout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} onLogout={handleLogout} />}>
-            <Route index element={<MonitoringDashboard sessions={sessions} />} />
-            <Route path="/scheduler" element={<SchedulerPage sessions={sessions} />} />
-            <Route path="/incubation" element={<IncubationDashboard onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />} />
-            <Route path="/sessions" element={<SessionsPage sessions={sessions} onCreateSession={(sessionData) => setSessions(prev => [...prev, sessionData as MonitoringSession])} />} />
-            <Route path="/sessions/:sessionId" element={<SessionDetailsPage sessions={sessions} />}>
-              <Route path="details" element={<SessionDetailsPage sessions={sessions} />} />
-              <Route path="verify-media" element={<MediaVerificationPage sessions={sessions} onStartSession={(sessionId, startDetails) => {
-                setSessions(prev => prev.map(session => 
-                  session.id === sessionId
-                    ? { ...session, status: 'in-progress' as const, startDetails }
-                    : session
-                ));
-              }} />} />
-              <Route path="store-controls" element={<NegativeControlStoragePage sessions={sessions} onStorageComplete={(sessionId, storageDetails) => {
-                setSessions(prev => prev.map(session =>
-                  session.id === sessionId
-                    ? { ...session, negativeControlStorage: storageDetails }
-                    : session
-                ));
-              }} />} />
-              <Route path="execute" element={<SessionExecutionPage sessions={sessions} onUpdateSession={(sessionId, updates) => {
-                setSessions(prev => prev.map(session =>
-                  session.id === sessionId
-                    ? { ...session, ...updates }
-                    : session
-                ));
-              }} />} />
-              <Route path="incubation" element={<IncubationPage sessions={sessions} onStartIncubation={(sessionId, details) => {
-                setSessions(prev => prev.map(session =>
-                  session.id === sessionId
-                    ? { ...session, incubation: details }
-                    : session
-                ));
-              }} />} />
-            </Route>
-            <Route path="/incubation" element={<IncubationDashboard onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />}>
-              <Route path="new" element={<CreateIncubationBatch sessions={sessions} onCreateBatch={(sessionIds) => {
-                const batchId = Date.now().toString();
-                setSessions(prev => prev.map(session =>
-                  sessionIds.includes(session.id)
-                    ? { ...session, incubationBatchId: batchId }
-                    : session
-                ));
-                return batchId;
-              }} />} />
-              <Route path="assign-incubator" element={<IncubatorAssignmentPage currentUser={{ id: '1', name: 'John Doe' }} onAssignIncubator={(id, details) => {
-                setSessions(prev => prev.map(session =>
-                  session.id === id
-                    ? { ...session, incubatorAssignment: details }
-                    : session
-                ));
-              }} />} />
-              <Route path="monitor" element={<IncubationMonitoringPage currentUser={{ id: '1', name: 'John Doe' }} onUpdateIncubation={(id, details) => {
-                setSessions(prev => prev.map(session =>
-                  session.id === id
-                    ? { ...session, ...details }
-                    : session
-                ));
-              }} />} />
-              <Route path="stage2-setup" element={<Stage2SetupPage currentUser={{ id: '1', name: 'John Doe' }} onStartStage2={(id, details) => {
-                setSessions(prev => prev.map(session =>
-                  session.id === id
-                    ? { ...session, stage2Setup: details }
-                    : session
-                ));
-              }} />} />
-            </Route>
+        <Route path="/" element={
+          isAuthenticated ? (
+            <Layout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} onLogout={handleLogout} />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }>
+          <Route index element={<MonitoringDashboard sessions={sessions} />} />
+          <Route path="scheduler" element={<SchedulerPage sessions={sessions} />} />
+          <Route path="incubation" element={<IncubationDashboard onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />} />
+          <Route path="sessions" element={<SessionsPage sessions={sessions} onCreateSession={(sessionData) => setSessions(prev => [...prev, sessionData as MonitoringSession])} />} />
+          <Route path="sessions/:sessionId">
+            <Route path="details" element={<SessionDetailsPage sessions={sessions} />} />
+            <Route path="verify-media" element={<MediaVerificationPage sessions={sessions} onStartSession={(sessionId, startDetails) => {
+              setSessions(prev => prev.map(session => 
+                session.id === sessionId
+                  ? { ...session, status: 'in-progress' as const, startDetails }
+                  : session
+              ));
+            }} />} />
+            <Route path="store-controls" element={<NegativeControlStoragePage sessions={sessions} onStorageComplete={(sessionId, storageDetails) => {
+              setSessions(prev => prev.map(session =>
+                session.id === sessionId
+                  ? { ...session, negativeControlStorage: storageDetails }
+                  : session
+              ));
+            }} />} />
+            <Route path="execute" element={<SessionExecutionPage sessions={sessions} onUpdateSession={(sessionId, updates) => {
+              setSessions(prev => prev.map(session =>
+                session.id === sessionId
+                  ? { ...session, ...updates }
+                  : session
+              ));
+            }} />} />
+            <Route path="incubation" element={<IncubationPage sessions={sessions} onStartIncubation={(sessionId, details) => {
+              setSessions(prev => prev.map(session =>
+                session.id === sessionId
+                  ? { ...session, incubation: details }
+                  : session
+              ));
+            }} />} />
           </Route>
-        ) : (
-          <Route path="*" element={<Navigate to="/login" />} />
-        )}
+          <Route path="incubation">
+            <Route path="new" element={<CreateIncubationBatch sessions={sessions} onCreateBatch={(sessionIds) => {
+              const batchId = Date.now().toString();
+              setSessions(prev => prev.map(session =>
+                sessionIds.includes(session.id)
+                  ? { ...session, incubationBatchId: batchId }
+                  : session
+              ));
+              return batchId;
+            }} />} />
+            <Route path="assign-incubator" element={<IncubatorAssignmentPage currentUser={{ id: '1', name: 'John Doe' }} onAssignIncubator={(id, details) => {
+              setSessions(prev => prev.map(session =>
+                session.id === id
+                  ? { ...session, incubatorAssignment: details }
+                  : session
+              ));
+            }} />} />
+            <Route path="monitor" element={<IncubationMonitoringPage currentUser={{ id: '1', name: 'John Doe' }} onUpdateIncubation={(id, details) => {
+              setSessions(prev => prev.map(session =>
+                session.id === id
+                  ? { ...session, ...details }
+                  : session
+              ));
+            }} />} />
+            <Route path="stage2-setup" element={<Stage2SetupPage currentUser={{ id: '1', name: 'John Doe' }} onStartStage2={(id, details) => {
+              setSessions(prev => prev.map(session =>
+                session.id === id
+                  ? { ...session, stage2Setup: details }
+                  : session
+              ));
+            }} />} />
+          </Route>
+        </Route>
       </Routes>
     </Router>
   );

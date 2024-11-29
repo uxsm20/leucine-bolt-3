@@ -21,16 +21,16 @@ export const FormCard: React.FC<FormCardProps> = ({
 }) => {
   return (
     <div className="bg-white shadow sm:rounded-lg">
-      <form onSubmit={onSubmit} className="space-y-6">
-        <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg font-medium leading-6 text-gray-900 mb-6">
+      <form onSubmit={onSubmit} className="space-y-8">
+        <div className="px-6 py-6 sm:p-8">
+          <h3 className="text-lg font-semibold leading-6 text-gray-900 mb-8">
             {title}
           </h3>
-          <div className="space-y-4">
+          <div className="space-y-6">
             {children}
           </div>
         </div>
-        <div className="px-4 py-3 bg-gray-50 text-right sm:px-6 space-x-3 rounded-b-lg">
+        <div className="px-6 py-4 bg-gray-50 text-right sm:px-8 space-x-3 rounded-b-lg">
           {onCancel && (
             <button
               type="button"

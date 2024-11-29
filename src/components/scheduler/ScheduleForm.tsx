@@ -77,6 +77,7 @@ export const ScheduleForm: React.FC<Props> = ({
         options={areas.map(area => ({ value: area.id, label: area.name }))}
         value={selectedArea}
         onChange={setSelectedArea}
+        helperText={areas.length === 0 ? "No production areas available" : undefined}
         required
       />
 
@@ -85,7 +86,7 @@ export const ScheduleForm: React.FC<Props> = ({
         options={filteredRooms.map(room => ({ value: room.id, label: room.name }))}
         selectedValues={selectedRooms}
         onChange={setSelectedRooms}
-        helperText="Select rooms for monitoring"
+        helperText={selectedArea && filteredRooms.length === 0 ? "No rooms available for selected area" : undefined}
       />
 
       <FormCheckboxGroup
@@ -93,7 +94,7 @@ export const ScheduleForm: React.FC<Props> = ({
         options={filteredPoints.map(point => ({ value: point.id, label: point.name }))}
         selectedValues={selectedPoints}
         onChange={setSelectedPoints}
-        helperText="Select sampling points for monitoring"
+        helperText={selectedRooms.length > 0 && filteredPoints.length === 0 ? "No sampling points available for selected rooms" : undefined}
       />
 
       <FormSelect
